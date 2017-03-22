@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>loadmore</title>
+    <style>
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+        }
+        
+        #ct li {
+            list-style: none;
+            border: 1px solid;
+            margin-top: 10px;
+            padding: 10px 8px;
+        }
+        
+        .btn {
+            text-decoration: none;
+            border: 1px solid;
+            border-radius: 4px;
+            padding: 10px 8px;
+            background-color: thistle;
+            display: block;
+            margin: 10px auto;
+            text-align: center;
+            width: 80px;
+        }
+        
+        .btn:hover {
+            background-color: steelblue;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="ct"></ul>
+    <a id="load-more" class="btn" href="javascript:void(0)">
+        加载更多
+    </a>
+    <script>
+        var btn = document.querySelector('#load-more')
+        var ct = document.querySelector('#ct')
+        var pageIndex = 0;
+        // var ifDataArrive=true
+        btn.addEventListener('click', function () {
+            // if(!ifDataArrive) {
+            //     return;
+            // }
+            var xhr = new XMLHttpRequest()
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200 || xhr.status === 304) {
+                        var results = JSON.parse(xhr.responseText)
+                        // console.log(xhr.responseText)
+                        // console.log(results);
+                        var fragment = document.createDocumentFragment()
+                        for (var i = 0; i < results.length; i++) {
+                            var node = document.createElement('li');
+                            node.innerText = results[i];
+                            fragment.appendChild(node)
+                        }
+                        ct.appendChild(fragment)
+                        
+                    } else {
+                        console.log("error")
+                    }
+                    // ifDataArrive=true;
+                }
+
+            }
+            
+            xhr.open('get', 'http://b.me.com:8080/loadMore?index=' + pageIndex + '&length=5', true)   //就是ajax请求一个不同域的地址
+            xhr.send()
+            pageIndex = pageIndex + 5;
+            // ifDataArrive=false;
+
+        })
+    </script>
+</body>
+
+</html>

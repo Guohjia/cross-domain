@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>loadmore</title>
+    <style>
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+        }
+        
+        #ct li {
+            list-style: none;
+            border: 1px solid;
+            margin-top: 10px;
+            padding: 10px 8px;
+        }
+        
+        .btn {
+            text-decoration: none;
+            border: 1px solid;
+            border-radius: 4px;
+            padding: 10px 8px;
+            background-color: thistle;
+            display: block;
+            margin: 10px auto;
+            text-align: center;
+            width: 80px;
+        }
+        
+        .btn:hover {
+            background-color: steelblue;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="ct"></ul>
+    <a id="load-more" class="btn" href="javascript:void(0)">
+        加载更多
+    </a>
+    <script>
+        var btn = document.querySelector('#load-more')
+        var ct = document.querySelector('#ct')
+        var pageIndex = 0;
+        // var ifDataArrive=true
+        btn.addEventListener('click', function () {
+            var script = document.createElement('script');
+            script.src = 'http://b.me.com:8080/getnews?callback=appendhtml&index=' + pageIndex + '&length=5'; 
+            pageIndex = pageIndex + 5;
+            document.head.appendChild(script);
+            document.head.removeChild(script);
+            
+        })
+        function appendhtml(news) {
+            var fragment = document.createDocumentFragment()
+            for (var i = 0; i < news.length; i++) {
+                var node = document.createElement('li');
+                node.innerText = news[i];
+                fragment.appendChild(node)
+            
+            }
+            ct.appendChild(fragment)
+            
+        }
+    </script>
+</body>
+
+</html>
